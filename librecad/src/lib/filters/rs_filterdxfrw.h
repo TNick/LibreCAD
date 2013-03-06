@@ -59,7 +59,7 @@ public:
     ~RS_FilterDXFRW();
 	
     virtual bool canImport(const QString &/*fileName*/, RS2::FormatType t) const {
-        return (t==RS2::FormatDXFRW);
+        return (t==RS2::FormatDXFRW || t==RS2::FormatDWG);
 	}
 	
     virtual bool canExport(const QString &/*fileName*/, RS2::FormatType t) const {
@@ -68,7 +68,7 @@ public:
     }
 
     // Import:
-    virtual bool fileImport(RS_Graphic& g, const QString& file, RS2::FormatType /*type*/);
+    virtual bool fileImport(RS_Graphic& g, const QString& file, RS2::FormatType type);
 
     // Methods from DRW_CreationInterface:
     virtual void addHeader(const DRW_Header* data);
@@ -179,6 +179,9 @@ public:
 
 private:
     void writeEntity(RS_Entity* e);
+    void printDwgError(int le);
+    QString printDwgVersion(int v);
+
 private:
     /** Pointer to the graphic we currently operate on. */
     RS_Graphic* graphic;
@@ -199,7 +202,7 @@ private:
     QHash <RS_Entity*, QString> noNameBlock;
     QHash <QString, QString> fontList;
     bool oldMText;
-    dxfRW *dxf;
+    dxfRW *dxfW;
 };
 
 #endif

@@ -40,6 +40,7 @@
 #include "rs_system.h"
 #include "rs_graphicview.h"
 #include "rs_grid.h"
+#include "rs_dialogfactory.h"
 
 #include <QStringList>
 
@@ -89,7 +90,7 @@ RS_FilterDXFRW::~RS_FilterDXFRW() {
  * will be created or the graphics from which the entities are
  * taken to be stored in a file.
  */
-bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatType /*type*/) {
+bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatType type) {
     RS_DEBUG->print("RS_FilterDXFRW::fileImport");
 
     RS_DEBUG->print("DXFRW Filter: importing file '%s'...", (const char*)QFile::encodeName(file));
@@ -103,17 +104,32 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
     codePage = "ANSI_1252";
     textStyle = "Standard";
 
-    dxf = new dxfRW(QFile::encodeName(file));
+    if (type == RS2::FormatDWG) {
+        dwgR dwgr(QFile::encodeName(file));
+        RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file");
+        bool success = dwgr->read(this, true);
+        RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file: OK");
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("Opened dwg file version %1.").arg(printDwgVersion(dwg.getVersion())));
+        int  lastError = dwg.getError();
+        if (success==false) {
+            printDwgError(lastError);
+            RS_DEBUG->print(RS_Debug::D_WARNING,
+                            "Cannot open DWG file '%s'.", (const char*)QFile::encodeName(file));
+            return false;
+        }
+    } else {
+        dxfRW dxfR(QFile::encodeName(file));
 
-    RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file");
-    bool success = dxf->read(this, true);
-    RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file: OK");
-    //graphic->setAutoUpdateBorders(true);
+        RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file");
+        bool success = dxfR.read(this, true);
+        RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading file: OK");
+        //graphic->setAutoUpdateBorders(true);
 
-    if (success==false) {
-        RS_DEBUG->print(RS_Debug::D_WARNING,
-                        "Cannot open DXF file '%s'.", (const char*)QFile::encodeName(file));
-        return false;
+        if (success==false) {
+            RS_DEBUG->print(RS_Debug::D_WARNING,
+                            "Cannot open DXF file '%s'.", (const char*)QFile::encodeName(file));
+            return false;
+        }
     }
 
     RS_DEBUG->print("RS_FilterDXFRW::fileImport: updating inserts");
@@ -121,7 +137,6 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
 
     RS_DEBUG->print("RS_FilterDXFRW::fileImport OK");
 
-    delete dxf;
     return true;
 }
 
@@ -1231,9 +1246,10 @@ bool RS_FilterDXFRW::fileExport(RS_Graphic& g, const QString& file, RS2::FormatT
         version = 1021;
     }
 
-    dxf = new dxfRW(QFile::encodeName(file));
-    bool success = dxf->write(this, exportVersion, false); //ascii
+    dxfW = new dxfRW(QFile::encodeName(file));
+    bool success = dxfW->write(this, exportVersion, false); //ascii
 //    bool success = dxf->write(this, exportVersion, true); //binary
+    delete dxfW;
 
     if (!success) {
         RS_DEBUG->print("RS_FilterDXFDW::fileExport: can't write file");
@@ -1272,7 +1288,7 @@ void RS_FilterDXFRW::writeBlockRecords(){
         blk = graphic->blockAt(i);
         if (!blk->isUndone()){
             RS_DEBUG->print("writing block record: %s", (const char*)blk->getName().toLocal8Bit());
-            dxf->writeBlockRecord(blk->getName().toUtf8().data());
+            dxfW->writeBlockRecord(blk->getName().toUtf8().data());
         }
     }
 }
@@ -1327,7 +1343,7 @@ void RS_FilterDXFRW::writeBlocks() {
     #ifndef  RS_VECTOR2D
             block.basePoint.z = 0.0;
     #endif
-            dxf->writeBlock(&block);
+            dxfW->writeBlock(&block);
             RS_EntityContainer *ct = (RS_EntityContainer *)it.key();
             for (RS_Entity* e=ct->firstEntity(RS2::ResolveNone);
                     e!=NULL; e=ct->nextEntity(RS2::ResolveNone)) {
@@ -1351,7 +1367,7 @@ void RS_FilterDXFRW::writeBlocks() {
 #ifndef  RS_VECTOR2D
             block.basePoint.z = blk->getBasePoint().z;
 #endif
-            dxf->writeBlock(&block);
+            dxfW->writeBlock(&block);
             for (RS_Entity* e=blk->firstEntity(RS2::ResolveNone);
                  e!=NULL; e=blk->nextEntity(RS2::ResolveNone)) {
                 if ( !(e->getFlag(RS2::FlagUndone)) ) {
@@ -1426,11 +1442,11 @@ void RS_FilterDXFRW::writeLTypes(){
     // Standard linetypes for LibreCAD / AutoCAD
     ltype.name = "CONTINUOUS";
     ltype.desc = "Solid line";
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
     ltype.name = "ByLayer";
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
     ltype.name = "ByBlock";
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.name = "DOT";
     ltype.desc = "Dot . . . . . . . . . . . . . . . . . . . . . .";
@@ -1438,7 +1454,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 6.35;
     ltype.path.push_back(0.0);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DOT2";
@@ -1447,7 +1463,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 3.175;
     ltype.path.push_back(0.0);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DOTX2";
@@ -1456,7 +1472,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 12.7;
     ltype.path.push_back(0.0);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHED";
@@ -1465,7 +1481,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 19.05;
     ltype.path.push_back(12.7);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHED2";
@@ -1474,7 +1490,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 9.525;
     ltype.path.push_back(6.35);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHEDX2";
@@ -1483,7 +1499,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.length = 38.1;
     ltype.path.push_back(25.4);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHDOT";
@@ -1494,7 +1510,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-6.35);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHDOT2";
@@ -1505,7 +1521,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-3.175);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DASHDOTX2";
@@ -1516,7 +1532,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-12.7);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DIVIDE";
@@ -1529,7 +1545,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-6.35);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DIVIDE2";
@@ -1542,7 +1558,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-3.175);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "DIVIDEX2";
@@ -1555,7 +1571,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-12.7);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "BORDER";
@@ -1568,7 +1584,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-6.35);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "BORDER2";
@@ -1581,7 +1597,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-3.175);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "BORDERX2";
@@ -1594,7 +1610,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-12.7);
     ltype.path.push_back(0.0);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "CENTER";
@@ -1605,7 +1621,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-6.35);
     ltype.path.push_back(6.35);
     ltype.path.push_back(-6.35);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "CENTER2";
@@ -1616,7 +1632,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-3.175);
     ltype.path.push_back(3.175);
     ltype.path.push_back(-3.175);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 
     ltype.path.clear();
     ltype.name = "CENTERX2";
@@ -1627,7 +1643,7 @@ void RS_FilterDXFRW::writeLTypes(){
     ltype.path.push_back(-12.7);
     ltype.path.push_back(12.7);
     ltype.path.push_back(-12.7);
-    dxf->writeLineType(&ltype);
+    dxfW->writeLineType(&ltype);
 }
 
 void RS_FilterDXFRW::writeLayers(){
@@ -1645,7 +1661,7 @@ void RS_FilterDXFRW::writeLayers(){
         if (!lay.plotF)
             RS_DEBUG->print(RS_Debug::D_WARNING, "RS_FilterDXF::writeLayers: layer %s saved as help layer", lay.name.c_str());
 //        lay.lineType = lineType.toStdString(); //.toLatin1().data();
-        dxf->writeLayer(&lay);
+        dxfW->writeLayer(&lay);
     }
 }
 
@@ -1700,7 +1716,7 @@ void RS_FilterDXFRW::writeTextstyles(){
          ts.name = (it.key()).toStdString();
          ts.font = it.value().toStdString();
 //         ts.flags;
-         dxf->writeTextstyle( &ts );
+         dxfW->writeTextstyle( &ts );
          ++it;
      }
 }
@@ -1734,7 +1750,7 @@ void RS_FilterDXFRW::writeVports(){
         vp.center.x = ( gv->getWidth() - gv->getOffsetX() )/ (fac.x * 2.0);
         vp.center.y = ( gv->getHeight() - gv->getOffsetY() )/ (fac.y * 2.0);
     }
-    dxf->writeVport(&vp);
+    dxfW->writeVport(&vp);
 }
 
 
@@ -1746,7 +1762,7 @@ void RS_FilterDXFRW::writeDimstyles(){
     dsty.dimexo = graphic->getVariableDouble("$DIMEXO", 0.625);
     dsty.dimgap = graphic->getVariableDouble("$DIMGAP", 0.625);
     dsty.dimtxt = graphic->getVariableDouble("$DIMTXT", 2.5);
-    dxf->writeDimstyle(&dsty);
+    dxfW->writeDimstyle(&dsty);
 }
 
 void RS_FilterDXFRW::writeEntities(){
@@ -1825,7 +1841,7 @@ void RS_FilterDXFRW::writePoint(RS_Point* p) {
     getEntityAttributes(&point, p);
     point.basePoint.x = p->getStartpoint().x;
     point.basePoint.y = p->getStartpoint().y;
-    dxf->writePoint(&point);
+    dxfW->writePoint(&point);
 }
 
 
@@ -1839,7 +1855,7 @@ void RS_FilterDXFRW::writeLine(RS_Line* l) {
     line.basePoint.y = l->getStartpoint().y;
     line.secPoint.x = l->getEndpoint().x;
     line.secPoint.y = l->getEndpoint().y;
-    dxf->writeLine(&line);
+    dxfW->writeLine(&line);
 }
 
 
@@ -1852,7 +1868,7 @@ void RS_FilterDXFRW::writeCircle(RS_Circle* c) {
     circle.basePoint.x = c->getCenter().x;
     circle.basePoint.y = c->getCenter().y;
     circle.radious = c->getRadius();
-    dxf->writeCircle(&circle);
+    dxfW->writeCircle(&circle);
 }
 
 
@@ -1872,7 +1888,7 @@ void RS_FilterDXFRW::writeArc(RS_Arc* a) {
         arc.staangle = a->getAngle1()*ARAD;
         arc.endangle = a->getAngle2()*ARAD;
     }
-    dxf->writeArc(&arc);
+    dxfW->writeArc(&arc);
 }
 
 
@@ -1922,7 +1938,7 @@ void RS_FilterDXFRW::writeLWPolyline(RS_Polyline* l) {
     }
     pol.vertexnum = pol.vertlist.size();
     getEntityAttributes(&pol, l);
-    dxf->writeLWPolyline(&pol);
+    dxfW->writeLWPolyline(&pol);
 }
 
 /**
@@ -1965,7 +1981,7 @@ void RS_FilterDXFRW::writePolyline(RS_Polyline* p) {
                                   ae->getEndpoint().y, 0.0, bulge));
     }
     getEntityAttributes(&pol, p);
-    dxf->writePolyline(&pol);
+    dxfW->writePolyline(&pol);
 }
 
 
@@ -1997,7 +2013,7 @@ void RS_FilterDXFRW::writeSpline(RS_Spline *s) {
                                       s->getEndpoint().y, 0.0, 0.0));
         }
         getEntityAttributes(&pol, s);
-        dxf->writePolyline(&pol);
+        dxfW->writePolyline(&pol);
         return;
     }
 
@@ -2032,7 +2048,7 @@ void RS_FilterDXFRW::writeSpline(RS_Spline *s) {
         controlpoint->y = cp.at(i).y;
      }
     getEntityAttributes(&sp, s);
-    dxf->writeSpline(&sp);
+    dxfW->writeSpline(&sp);
 
 }
 
@@ -2057,7 +2073,7 @@ void RS_FilterDXFRW::writeEllipse(RS_Ellipse* s) {
         el.staparam = s->getAngle1();
         el.endparam = s->getAngle2();
     }
-    dxf->writeEllipse(&el);
+    dxfW->writeEllipse(&el);
 }
 
 /**
@@ -2082,7 +2098,7 @@ void RS_FilterDXFRW::writeInsert(RS_Insert* i) {
     in.rowcount = i->getRows();
     in.colspace = i->getSpacing().x;
     in.rowspace =i->getSpacing().y;
-    dxf->writeInsert(&in);
+    dxfW->writeInsert(&in);
 }
 
 
@@ -2143,7 +2159,7 @@ void RS_FilterDXFRW::writeMText(RS_MText* t) {
                     text->basePoint.x += inc.x;
                     text->basePoint.y += inc.y;
                 }
-                dxf->writeText(text);
+                dxfW->writeText(text);
             }
         }
     } else {
@@ -2172,7 +2188,7 @@ void RS_FilterDXFRW::writeMText(RS_MText* t) {
         //        text->widthscale =t->getWidth();
         text->widthscale =t->getUsedTextWidth(); //getSize().x;
 
-        dxf->writeMText((DRW_MText*)text);
+        dxfW->writeMText((DRW_MText*)text);
     }
 }
 
@@ -2210,7 +2226,7 @@ void RS_FilterDXFRW::writeText(RS_Text* t){
 
     if (!t->getText().isEmpty()) {
         text.text = toDxfString(t->getText()).toUtf8().data();
-        dxf->writeText(&text);
+        dxfW->writeText(&text);
     }
 }
 
@@ -2236,7 +2252,7 @@ void RS_FilterDXFRW::writeDimension(RS_Dimension* d) {
             in.angle = 0.0;
             in.colcount = in.rowcount = 1;
             in.colspace = in.rowspace = 0.0;
-            dxf->writeInsert(&in);
+            dxfW->writeInsert(&in);
         }
         return;
     }
@@ -2324,7 +2340,7 @@ void RS_FilterDXFRW::writeDimension(RS_Dimension* d) {
     dim->setTextLineFactor(d->getLineSpacingFactor());
     //   void setName(const string s) {name = s;}
 
-    dxf->writeDimension(dim);
+    dxfW->writeDimension(dim);
     delete dim;
 }
 
@@ -2358,7 +2374,7 @@ void RS_FilterDXFRW::writeLeader(RS_Leader* l) {
     if (li != NULL) {
         leader.vertexlist.push_back(new DRW_Coord(li->getEndpoint().x, li->getEndpoint().y, 0.0));
     }
-    dxf->writeLeader(&leader);
+    dxfW->writeLeader(&leader);
 }
 
 
@@ -2383,7 +2399,7 @@ void RS_FilterDXFRW::writeHatch(RS_Hatch * h) {
             in.angle = 0.0;
             in.colcount = in.rowcount = 1;
             in.colspace = in.rowspace = 0.0;
-            dxf->writeInsert(&in);
+            dxfW->writeInsert(&in);
         }
         return;
     }
@@ -2495,7 +2511,7 @@ void RS_FilterDXFRW::writeHatch(RS_Hatch * h) {
             ha.appendLoop(lData);
         }
     }
-    dxf->writeHatch(&ha);
+    dxfW->writeHatch(&ha);
 }
 
 
@@ -2524,7 +2540,7 @@ void RS_FilterDXFRW::writeSolid(RS_Solid* s) {
         solid.fourPoint.x = corner.x;
         solid.fourPoint.y = corner.y;
     }
-    dxf->writeSolid(&solid);
+    dxfW->writeSolid(&solid);
 }
 
 
@@ -2544,7 +2560,7 @@ void RS_FilterDXFRW::writeImage(RS_Image * i) {
     image.contrast = i->getContrast();
     image.fade = i->getFade();
 
-    DRW_ImageDef *imgDef = dxf->writeImage(&image, i->getFile().toUtf8().data());
+    DRW_ImageDef *imgDef = dxfW->writeImage(&image, i->getFile().toUtf8().data());
     if (imgDef != NULL) {
         imgDef->loaded = 1;
         imgDef->u = i->getData().size.x;
@@ -3493,6 +3509,64 @@ bool RS_FilterDXFRW::isVariableTwoDimensional(const QString& var) {
     }
 }
 
+QStringRS_FilterDXFRW::printDwgVersion(int v){
+    switch (v) {
+    case DRW::AC1006:
+        return "10";
+        break;
+    case DRW::AC1009:
+        return "dwg version 11 or 12";
+    case DRW::AC1012:
+        return "dwg version 13";
+    case DRW::AC1014:
+        return "dwg version 14";
+    case DRW::AC1015:
+        return "dwg version 2000";
+    case DRW::AC1018:
+        return "dwg version 2004";
+    case DRW::AC1021:
+        return "dwg version 2007";
+    case DRW::AC1024:
+        return "dwg version 2010";
+    default:
+        return "unknown";
+    }
+}
+
+void RS_FilterDXFRW::printDwgError(int le){
+    RS_DIALOGFACTORY->commandMessage(QObject::tr("Opening dwg file."));
+    switch (le) {
+    case DRW::BAD_UNKNOWN:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("unknown error opening dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_UNKNOWN");
+        break;
+    case DRW::BAD_OPEN:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("can't open this dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_OPEN");
+        break;
+    case DRW::BAD_VERSION:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("unsupported dwg version"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_VERSION");
+        break;
+    case DRW::BAD_READ_FILE_HEADER:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("error reading file header in dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_READ_FILE_HEADER");
+        break;
+    case DRW::BAD_READ_OFFSETS:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("error reading offsets in dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_READ_OFFSETS");
+        break;
+    case DRW::BAD_READ_TABLES:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("error reading tables in dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_READ_TABLES");
+        break;
+    case DRW::BAD_READ_ENTITIES:
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("error reading entities in dwg file"));
+        RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_READ_ENTITIES");
+        break;
+    default:
+    }
+}
 
 // EOF
 
