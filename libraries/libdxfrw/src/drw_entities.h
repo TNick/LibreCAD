@@ -17,8 +17,12 @@
 #include <string>
 #include <vector>
 #include "drw_base.h"
+#include "dwgbuffer.h" //RLZ TODO: move type defs to drw_base.h
+
+#define DRW_UNUSED(x) (void)x
 
 class dxfReader;
+//class dwgBuffer;
 class DRW_Polyline;
 
 using std::string;
@@ -112,10 +116,12 @@ public:
     }
 
     virtual void applyExtrusion() = 0;
+    virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 protected:
     void parseCode(int code, dxfReader *reader);
     void calculateAxis(DRW_Coord extPoint);
     void extrudePoint(DRW_Coord extPoint, DRW_Coord *point);
+    bool parseDwgEntHandle(DRW::Version version, dwgBuffer *buf);
 
 public:
     enum DRW::ETYPE eType;     /*!< enum: entity type, code 0 */
@@ -131,8 +137,14 @@ public:
     bool visible;              /*!< entity visibility, code 60 */
     int color24;               /*!< 24-bit color, code 420 */
     string colorName;          /*!< color name, code 430 */
-    int space;                 /*!< space indicator 0 = model, 1 paper , code 67*/
+    int space;                 /*!< space indicator 0 = model, 1 paper, code 67*/
     bool haveExtrusion;        /*!< set to true if the entity have extrusion*/
+//***** dwg parse ********/
+    duint8 nextLinkers; //aka nolinks //B
+    duint8 plotFlags; //presence of plot style //BB
+public: //only for read dwg
+    dwgHandle lTypeH;
+    dwgHandle layerH;
 private:
     DRW_Coord extAxisX;
     DRW_Coord extAxisY;
@@ -156,6 +168,7 @@ public:
     virtual void applyExtrusion(){}
 
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 
 public:
     DRW_Coord basePoint;      /*!<  base point, code 10, 20 & 30 */
@@ -177,6 +190,7 @@ public:
 
     virtual void applyExtrusion(){}
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 
 public:
     DRW_Coord secPoint;        /*!< second point, code 11, 21 & 31 */
@@ -219,6 +233,7 @@ public:
 
     virtual void applyExtrusion();
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 
 public:
     double radious;                 /*!< radius, code 40 */
@@ -238,6 +253,7 @@ public:
 
     virtual void applyExtrusion(){DRW_Circle::applyExtrusion();}
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 
 public:
     double staangle;               /*!< x coordinate, code 50 */
@@ -261,6 +277,8 @@ public:
 
     void parseCode(int code, dxfReader *reader);
     void toPolyline(DRW_Polyline *pol);
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf);
+
 public:
     double ratio;           /*!< ratio, code 40 */
     double staparam;        /*!< start parameter, code 41, 0.0 for full ellipse*/
@@ -420,6 +438,7 @@ public:
     }
 
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf){DRW_UNUSED(v);DRW_UNUSED(buf); return false;}
 
 public:
     int vertexnum;            /*!< number of vertex, code 90 */
@@ -633,6 +652,7 @@ public:
     virtual void applyExtrusion(){}
 
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf){DRW_UNUSED(v);DRW_UNUSED(buf); return false;}
 
 public:
     double ex;                /*!< normal vector x coordinate, code 210 */
@@ -871,6 +891,7 @@ public:
 
     void parseCode(int code, dxfReader *reader);
     virtual void applyExtrusion(){}
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf){DRW_UNUSED(v);DRW_UNUSED(buf); return false;}
 
     DRW_Coord getDefPoint() const {return defPoint;}      /*!< Definition point, code 10, 20 & 30 */
     void setDefPoint(const DRW_Coord p) {defPoint =p;}
@@ -1125,6 +1146,7 @@ public:
 
     virtual void applyExtrusion(){}
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf){DRW_UNUSED(v);DRW_UNUSED(buf); return false;}
 
 public:
     UTF8STRING style;              /*!< Dimension style name, code 3 */

@@ -46,6 +46,7 @@
 
 #include <qtextcodec.h>
 
+#include "libdwgr.h"
 
 /**
  * Default constructor.
@@ -107,10 +108,10 @@ bool RS_FilterDXFRW::fileImport(RS_Graphic& g, const QString& file, RS2::FormatT
     if (type == RS2::FormatDWG) {
         dwgR dwgr(QFile::encodeName(file));
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file");
-        bool success = dwgr->read(this, true);
+        bool success = dwgr.read(this, true);
         RS_DEBUG->print("RS_FilterDXFRW::fileImport: reading DWG file: OK");
-        RS_DIALOGFACTORY->commandMessage(QObject::tr("Opened dwg file version %1.").arg(printDwgVersion(dwg.getVersion())));
-        int  lastError = dwg.getError();
+        RS_DIALOGFACTORY->commandMessage(QObject::tr("Opened dwg file version %1.").arg(printDwgVersion(dwgr.getVersion())));
+        int  lastError = dwgr.getError();
         if (success==false) {
             printDwgError(lastError);
             RS_DEBUG->print(RS_Debug::D_WARNING,
@@ -3509,7 +3510,7 @@ bool RS_FilterDXFRW::isVariableTwoDimensional(const QString& var) {
     }
 }
 
-QStringRS_FilterDXFRW::printDwgVersion(int v){
+QString RS_FilterDXFRW::printDwgVersion(int v){
     switch (v) {
     case DRW::AC1006:
         return "10";
@@ -3565,6 +3566,7 @@ void RS_FilterDXFRW::printDwgError(int le){
         RS_DEBUG->print("RS_FilterDXFRW::printDwgError: DRW::BAD_READ_ENTITIES");
         break;
     default:
+        break;
     }
 }
 
