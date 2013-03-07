@@ -256,8 +256,8 @@ public:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf);
 
 public:
-    double staangle;               /*!< x coordinate, code 50 */
-    double endangle;               /*!< x coordinate, code 51 */
+    double staangle;            /*!< start angle, code 50 in radians*/
+    double endangle;            /*!< end angle, code 51 in radians */
     int isccw;                  /*!< is counter clockwise arc?, only used in hatch, code 73 */
 };
 
