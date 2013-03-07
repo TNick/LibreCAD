@@ -72,9 +72,7 @@ void DRW_Entity::parseCode(int code, dxfReader *reader){
         color = reader->getInt32();
         break;
     case 370:
-//        lWeight = (DRW::LWEIGHT)reader->getInt32();
-//RLZ: TODO as integer or enum??
-        lWeight = reader->getInt32();
+        lWeight = DRW_LW_Conv::dxfInt2lineWidth(reader->getInt32());
         break;
     case 48:
         ltypeScale = reader->getDouble();
@@ -199,7 +197,7 @@ bool DRW_Entity::parseDwg(DRW::Version version, dwgBuffer *buf){
     dint16 invisibleFlag = buf->getBitShort(); //BS
     DBG(" invisibleFlag: "); DBG(invisibleFlag);
     if (version > DRW::AC1014) {//2000+
-        lWeight = buf->getRawChar8(); //RC
+        lWeight = DRW_LW_Conv::dwgInt2lineWidth( buf->getRawChar8() ); //RC
         DBG(" lwFlag (lWeight): "); DBG(lWeight); DBG("\n");
     }
     return buf->isGood();

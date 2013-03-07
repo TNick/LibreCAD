@@ -66,16 +66,16 @@ namespace DRW {
         UNKNOWN
     };
 
-    enum LWEIGHT {
-        L0=0,
-        L1,
-        L2,
-        L3,
-        L4,
-        L5,
-        L6,
-        L7
-    };
+//    enum LWEIGHT {
+//        L0=0,
+//        L1,
+//        L2,
+//        L3,
+//        L4,
+//        L5,
+//        L6,
+//        L7
+//    };
 
 }
 
@@ -94,7 +94,7 @@ public:
         ltypeScale = 1.0;
         visible = true;
         layer = "0";
-        lWeight = -1; // default BYLAYER (-1)
+        lWeight = DRW_LW_Conv::widthByLayer; // default BYLAYER  (dxf -1, dwg 29)
         space = 0; // default ModelSpace (0)
         haveExtrusion = false;
     }
@@ -130,9 +130,7 @@ public:
     UTF8STRING layer;              /*!< layer name, code 8 */
     UTF8STRING lineType;           /*!< line type, code 6 */
     int color;                 /*!< entity color, code 62 */
-    //RLZ: TODO as integer or enum??
-    int lWeight;               /*!< entity lineweight, code 370 */
-//    enum DRW::LWEIGHT lWeight; /*!< entity lineweight, code 370 */
+    enum DRW_LW_Conv::lineWidth lWeight; /*!< entity lineweight, code 370 */
     double ltypeScale;         /*!< linetype scale, code 48 */
     bool visible;              /*!< entity visibility, code 60 */
     int color24;               /*!< 24-bit color, code 420 */
