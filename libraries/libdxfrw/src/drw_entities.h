@@ -66,17 +66,6 @@ namespace DRW {
         UNKNOWN
     };
 
-//    enum LWEIGHT {
-//        L0=0,
-//        L1,
-//        L2,
-//        L3,
-//        L4,
-//        L5,
-//        L6,
-//        L7
-//    };
-
 }
 
 //! Base class for entities
@@ -95,7 +84,7 @@ public:
         visible = true;
         layer = "0";
         lWeight = DRW_LW_Conv::widthByLayer; // default BYLAYER  (dxf -1, dwg 29)
-        space = 0; // default ModelSpace (0)
+        handleBlock = space = 0; // default ModelSpace (0) & handleBlock = no handle (0)
         haveExtrusion = false;
     }
 
@@ -140,6 +129,7 @@ public:
 //***** dwg parse ********/
     duint8 nextLinkers; //aka nolinks //B
     duint8 plotFlags; //presence of plot style //BB
+//    duint32 ownerHandle; //handle of owner object (like block)
 public: //only for read dwg
     dwgHandle lTypeH;
     dwgHandle layerH;
@@ -351,14 +341,17 @@ public:
         layer = "0";
         flags = 0;
         name = "*U0";
+        isEnd = false;
     }
 
     virtual void applyExtrusion(){}
     void parseCode(int code, dxfReader *reader);
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf);
 
 public:
     UTF8STRING name;             /*!< block name, code 2 */
     int flags;                   /*!< block type, code 70 */
+    bool isEnd; //for dwg parsing
 };
 
 
