@@ -78,6 +78,7 @@ public:
     virtual void addVport(const DRW_Vport& data);
     virtual void addTextStyle(const DRW_Textstyle& /*data*/){}
     virtual void addBlock(const DRW_Block& data);
+    virtual void setBlock(const int handle);
     virtual void endBlock();
     virtual void addPoint(const DRW_Point& data);
     virtual void addLine(const DRW_Line& data);
@@ -203,6 +204,10 @@ private:
     QHash <QString, QString> fontList;
     bool oldMText;
     dxfRW *dxfW;
+    /** hash of block containers and handleBlock numbers to read dwg files */
+    QHash<int, RS_EntityContainer*> blockHash;
+    /** Pointer to entity container to store posible horphan entites like paper space */
+    RS_EntityContainer* dummyContainer;
 };
 
 #endif
