@@ -397,6 +397,12 @@ bool dwgReader15::readDwgEntity(objHandle& obj, DRW_Interface& intfa){
             parseAttribs(&e);
             intfa.addText(e);
             break; }
+        case 44: {
+            DRW_MText e;
+            ret = e.parseDwg(version, &buff);
+            parseAttribs(&e);
+            intfa.addMText(e);
+            break; }
         default:
             break;
         }
