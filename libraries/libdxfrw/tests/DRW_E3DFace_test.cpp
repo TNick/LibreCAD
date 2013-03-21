@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char e3dface_OD = {
+static unsigned char e3dface_OD[] = {
 	0x0
 };
 
 TEST(DRW_E3DFace, parseDwg) {
 //	DRW_E3DFace	tst;
-	dwgBuffer 	buf(&e3dface_OD, sizeof(e3dface_OD)-1 );
+	dwgBuffer 	buf((char*)e3dface_OD, sizeof(e3dface_OD)-1 );
 //	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

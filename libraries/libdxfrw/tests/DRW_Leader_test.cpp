@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char leader_OD = {
+static unsigned char leader_OD[] = {
 	0x0
 };
 
 TEST(DRW_Leader, parseDwg) {
 	DRW_Leader	tst;
-	dwgBuffer 	buf(&leader_OD, sizeof(leader_OD)-1 );
+	dwgBuffer 	buf((char*)leader_OD, sizeof(leader_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

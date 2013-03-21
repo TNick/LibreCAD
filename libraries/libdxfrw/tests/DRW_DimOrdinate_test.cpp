@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char dimordinate_OD = {
+static unsigned char dimordinate_OD[] = {
 	0x0
 };
 
 TEST(DRW_DimOrdinate, parseDwg) {
 	DRW_DimOrdinate	tst;
-	dwgBuffer 	buf(&dimordinate_OD, sizeof(dimordinate_OD)-1 );
+	dwgBuffer 	buf((char*)dimordinate_OD, sizeof(dimordinate_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

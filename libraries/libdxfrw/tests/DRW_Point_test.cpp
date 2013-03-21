@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char point_OD = {
+static unsigned char point_OD[] = {
 	0x0
 };
 
 TEST(DRW_Point, parseDwg) {
 	DRW_Point	tst;
-	dwgBuffer 	buf(&point_OD, sizeof(point_OD)-1 );
+	dwgBuffer 	buf((char*)point_OD, sizeof(point_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

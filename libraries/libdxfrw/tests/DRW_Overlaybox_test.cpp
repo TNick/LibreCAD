@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char overlaybox_OD = {
+static unsigned char overlaybox_OD[] = {
 	0x0
 };
 
 TEST(DRW_Overlaybox, parseDwg) {
 //	DRW_Overlaybox	tst;
-	dwgBuffer 	buf(&overlaybox_OD, sizeof(overlaybox_OD)-1 );
+	dwgBuffer 	buf((char*)overlaybox_OD, sizeof(overlaybox_OD)-1 );
 //	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

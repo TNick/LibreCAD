@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char insert_OD = {
+static unsigned char insert_OD[] = {
 	0x0
 };
 
 TEST(DRW_Insert, parseDwg) {
 	DRW_Insert	tst;
-	dwgBuffer 	buf(&insert_OD, sizeof(insert_OD)-1 );
+	dwgBuffer 	buf((char*)insert_OD, sizeof(insert_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

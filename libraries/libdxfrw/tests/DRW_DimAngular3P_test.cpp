@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char dimangular3p_OD = {
+static unsigned char dimangular3p_OD[] = {
 	0x0
 };
 
 TEST(DRW_DimAngular3P, parseDwg) {
 //	DRW_DimAngular3P	tst;
-	dwgBuffer 	buf(&dimangular3p_OD, sizeof(dimangular3p_OD)-1 );
+	dwgBuffer 	buf((char*)dimangular3p_OD, sizeof(dimangular3p_OD)-1 );
 //	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

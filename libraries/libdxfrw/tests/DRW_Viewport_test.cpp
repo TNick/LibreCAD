@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char viewport_OD = {
+static unsigned char viewport_OD[] = {
 	0x0
 };
 
 TEST(DRW_Viewport, parseDwg) {
 	DRW_Viewport	tst;
-	dwgBuffer 	buf(&viewport_OD, sizeof(viewport_OD)-1 );
+	dwgBuffer 	buf((char*)viewport_OD, sizeof(viewport_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

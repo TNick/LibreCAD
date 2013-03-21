@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char spline_OD = {
+static unsigned char spline_OD[] = {
 	0x0
 };
 
 TEST(DRW_Spline, parseDwg) {
 	DRW_Spline	tst;
-	dwgBuffer 	buf(&spline_OD, sizeof(spline_OD)-1 );
+	dwgBuffer 	buf((char*)spline_OD, sizeof(spline_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

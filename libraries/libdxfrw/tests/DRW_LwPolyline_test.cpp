@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char lwpolyline_OD = {
+static unsigned char lwpolyline_OD[] = {
 	0x0
 };
 
 TEST(DRW_LWPolyline, parseDwg) {
 	DRW_LWPolyline	tst;
-	dwgBuffer 	buf(&lwpolyline_OD, sizeof(lwpolyline_OD)-1 );
+	dwgBuffer 	buf((char*)lwpolyline_OD, sizeof(lwpolyline_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

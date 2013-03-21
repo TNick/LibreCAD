@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static char dimdiametric_OD = {
+static unsigned char dimdiametric_OD[] = {
 	0x0
 };
 
 TEST(DRW_DimDiametric, parseDwg) {
 	DRW_DimDiametric	tst;
-	dwgBuffer 	buf(&dimdiametric_OD, sizeof(dimdiametric_OD)-1 );
+	dwgBuffer 	buf((char*)dimdiametric_OD, sizeof(dimdiametric_OD)-1 );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }
