@@ -19,7 +19,7 @@ static unsigned char circle_OD[] = {
 
 TEST(DRW_Circle, parseDwg) {
 	DRW_Circle	tst;
-	dwgBuffer 	buf((char*)circle_OD, sizeof(circle_OD)-1 );
+	dwgBuffer 	buf((char*)circle_OD, sizeof(circle_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

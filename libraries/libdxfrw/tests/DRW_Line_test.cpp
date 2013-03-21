@@ -19,7 +19,7 @@ static unsigned char line_OD[] = {
 
 TEST(DRW_Line, parseDwg) {
 	DRW_Line	tst;
-	dwgBuffer 	buf((char*)line_OD, sizeof(line_OD)-1 );
+	dwgBuffer 	buf((char*)line_OD, sizeof(line_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

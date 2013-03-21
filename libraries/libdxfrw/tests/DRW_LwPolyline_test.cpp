@@ -19,7 +19,7 @@ static unsigned char lwpolyline_OD[] = {
 
 TEST(DRW_LWPolyline, parseDwg) {
 	DRW_LWPolyline	tst;
-	dwgBuffer 	buf((char*)lwpolyline_OD, sizeof(lwpolyline_OD)-1 );
+	dwgBuffer 	buf((char*)lwpolyline_OD, sizeof(lwpolyline_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

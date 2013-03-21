@@ -19,7 +19,7 @@ static unsigned char arc_OD[] = {
 
 TEST(DRW_Arc, parseDwg) {
 	DRW_Arc	tst;
-	dwgBuffer 	buf((char*)arc_OD, sizeof(arc_OD)-1 );
+	dwgBuffer 	buf((char*)arc_OD, sizeof(arc_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

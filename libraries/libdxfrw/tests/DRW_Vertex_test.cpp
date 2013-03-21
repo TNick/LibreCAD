@@ -19,7 +19,7 @@ static unsigned char vertex_OD[] = {
 
 TEST(DRW_Vertex, parseDwg) {
 	DRW_Vertex	tst;
-	dwgBuffer 	buf((char*)vertex_OD, sizeof(vertex_OD)-1 );
+	dwgBuffer 	buf((char*)vertex_OD, sizeof(vertex_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

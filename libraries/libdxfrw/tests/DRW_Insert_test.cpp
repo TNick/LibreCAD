@@ -19,7 +19,7 @@ static unsigned char insert_OD[] = {
 
 TEST(DRW_Insert, parseDwg) {
 	DRW_Insert	tst;
-	dwgBuffer 	buf((char*)insert_OD, sizeof(insert_OD)-1 );
+	dwgBuffer 	buf((char*)insert_OD, sizeof(insert_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

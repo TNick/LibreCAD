@@ -19,7 +19,7 @@ static unsigned char dimangular_OD[] = {
 
 TEST(DRW_DimAngular, parseDwg) {
 	DRW_DimAngular	tst;
-	dwgBuffer 	buf((char*)dimangular_OD, sizeof(dimangular_OD)-1 );
+	dwgBuffer 	buf((char*)dimangular_OD, sizeof(dimangular_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

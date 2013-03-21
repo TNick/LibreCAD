@@ -19,7 +19,7 @@ static unsigned char e3dface_OD[] = {
 
 TEST(DRW_E3DFace, parseDwg) {
 //	DRW_E3DFace	tst;
-	dwgBuffer 	buf((char*)e3dface_OD, sizeof(e3dface_OD)-1 );
+	dwgBuffer 	buf((char*)e3dface_OD, sizeof(e3dface_OD) );
 //	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

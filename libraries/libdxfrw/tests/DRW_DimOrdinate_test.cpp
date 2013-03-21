@@ -19,7 +19,7 @@ static unsigned char dimordinate_OD[] = {
 
 TEST(DRW_DimOrdinate, parseDwg) {
 	DRW_DimOrdinate	tst;
-	dwgBuffer 	buf((char*)dimordinate_OD, sizeof(dimordinate_OD)-1 );
+	dwgBuffer 	buf((char*)dimordinate_OD, sizeof(dimordinate_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

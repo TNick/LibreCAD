@@ -19,7 +19,7 @@ static unsigned char dimdiametric_OD[] = {
 
 TEST(DRW_DimDiametric, parseDwg) {
 	DRW_DimDiametric	tst;
-	dwgBuffer 	buf((char*)dimdiametric_OD, sizeof(dimdiametric_OD)-1 );
+	dwgBuffer 	buf((char*)dimdiametric_OD, sizeof(dimdiametric_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

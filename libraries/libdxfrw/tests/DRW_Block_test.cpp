@@ -19,7 +19,7 @@ static unsigned char block_OD[] = {
 
 TEST(DRW_Block, parseDwg) {
 	DRW_Block	tst;
-	dwgBuffer 	buf((char*)block_OD, sizeof(block_OD)-1 );
+	dwgBuffer 	buf((char*)block_OD, sizeof(block_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

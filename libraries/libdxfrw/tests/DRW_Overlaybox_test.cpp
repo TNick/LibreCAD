@@ -19,7 +19,7 @@ static unsigned char overlaybox_OD[] = {
 
 TEST(DRW_Overlaybox, parseDwg) {
 //	DRW_Overlaybox	tst;
-	dwgBuffer 	buf((char*)overlaybox_OD, sizeof(overlaybox_OD)-1 );
+	dwgBuffer 	buf((char*)overlaybox_OD, sizeof(overlaybox_OD) );
 //	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

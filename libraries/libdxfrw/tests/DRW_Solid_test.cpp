@@ -19,7 +19,7 @@ static unsigned char solid_OD[] = {
 
 TEST(DRW_Solid, parseDwg) {
 	DRW_Solid	tst;
-	dwgBuffer 	buf((char*)solid_OD, sizeof(solid_OD)-1 );
+	dwgBuffer 	buf((char*)solid_OD, sizeof(solid_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

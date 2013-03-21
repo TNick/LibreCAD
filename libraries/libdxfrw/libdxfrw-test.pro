@@ -9,6 +9,9 @@ include(../../common.pro)
 # google test library
 LIBS += -lgtest_main -lgtest # -ldxfrw
 
+# debug output; can't use that because it requires an fricking extern QTextStream readLog;
+# DEFINES += DRWG_DBG=1
+
 SOURCES += \
     tests/DRW_Xline_test.cpp \
     tests/DRW_Viewport_test.cpp \
@@ -51,7 +54,8 @@ SOURCES += \
     src/dwgbuffer.cpp \
     src/drw_textcodec.cpp \
     src/drw_objects.cpp \
-    src/drw_entities.cpp
+    src/drw_entities.cpp \
+    tests/dwgBuffer_test.cpp
 
 HEADERS += \
     src/libdxfrw.h \
@@ -61,11 +65,9 @@ HEADERS += \
     src/dwgreader.h \
     src/dwgbuffer.h \
     src/drw_textcodec.h \
-    src/drw_objects.h.orig \
     src/drw_objects.h \
     src/drw_interface.h \
     src/drw_entities.h \
-    src/drw_entities.cpp.orig \
     src/drw_cptables.h \
     src/drw_cptable950.h \
     src/drw_cptable949.h \

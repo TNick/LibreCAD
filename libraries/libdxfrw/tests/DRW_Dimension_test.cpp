@@ -19,7 +19,7 @@ static unsigned char dimension_OD[] = {
 
 TEST(DRW_Dimension, parseDwg) {
 	DRW_Dimension	tst;
-	dwgBuffer 	buf((char*)dimension_OD, sizeof(dimension_OD)-1 );
+	dwgBuffer 	buf((char*)dimension_OD, sizeof(dimension_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

@@ -19,7 +19,7 @@ static unsigned char dimlinear_OD[] = {
 
 TEST(DRW_DimLinear, parseDwg) {
 	DRW_DimLinear	tst;
-	dwgBuffer 	buf((char*)dimlinear_OD, sizeof(dimlinear_OD)-1 );
+	dwgBuffer 	buf((char*)dimlinear_OD, sizeof(dimlinear_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

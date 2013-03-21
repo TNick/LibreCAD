@@ -19,7 +19,7 @@ static unsigned char constructionline_OD[] = {
 
 TEST(DRW_ConstructionLine, parseDwg) {
 //	DRW_ConstructionLine	tst;
-	dwgBuffer 	buf((char*)constructionline_OD, sizeof(constructionline_OD)-1 );
+	dwgBuffer 	buf((char*)constructionline_OD, sizeof(constructionline_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

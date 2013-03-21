@@ -19,7 +19,7 @@ static unsigned char ray_OD[] = {
 
 TEST(DRW_Ray, parseDwg) {
 	DRW_Ray	tst;
-	dwgBuffer 	buf((char*)ray_OD, sizeof(ray_OD)-1 );
+	dwgBuffer 	buf((char*)ray_OD, sizeof(ray_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

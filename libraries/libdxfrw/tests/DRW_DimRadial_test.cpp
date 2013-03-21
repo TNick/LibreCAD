@@ -19,7 +19,7 @@ static unsigned char dimradial_OD[] = {
 
 TEST(DRW_DimRadial, parseDwg) {
 	DRW_DimRadial	tst;
-	dwgBuffer 	buf((char*)dimradial_OD, sizeof(dimradial_OD)-1 );
+	dwgBuffer 	buf((char*)dimradial_OD, sizeof(dimradial_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

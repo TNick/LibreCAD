@@ -19,7 +19,7 @@ static unsigned char dimaligned_OD[] = {
 
 TEST(DRW_DimAligned, parseDwg) {
 	DRW_DimAligned	tst;
-	dwgBuffer 	buf((char*)dimaligned_OD, sizeof(dimaligned_OD)-1 );
+	dwgBuffer 	buf((char*)dimaligned_OD, sizeof(dimaligned_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

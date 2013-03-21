@@ -19,7 +19,7 @@ static unsigned char leader_OD[] = {
 
 TEST(DRW_Leader, parseDwg) {
 	DRW_Leader	tst;
-	dwgBuffer 	buf((char*)leader_OD, sizeof(leader_OD)-1 );
+	dwgBuffer 	buf((char*)leader_OD, sizeof(leader_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

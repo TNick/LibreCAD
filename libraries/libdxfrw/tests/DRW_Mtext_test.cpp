@@ -19,7 +19,7 @@ static unsigned char mtext_OD[] = {
 
 TEST(DRW_MText, parseDwg) {
 	DRW_MText	tst;
-	dwgBuffer 	buf((char*)mtext_OD, sizeof(mtext_OD)-1 );
+	dwgBuffer 	buf((char*)mtext_OD, sizeof(mtext_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

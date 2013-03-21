@@ -19,7 +19,7 @@ static unsigned char trace_OD[] = {
 
 TEST(DRW_Trace, parseDwg) {
 	DRW_Trace	tst;
-	dwgBuffer 	buf((char*)trace_OD, sizeof(trace_OD)-1 );
+	dwgBuffer 	buf((char*)trace_OD, sizeof(trace_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

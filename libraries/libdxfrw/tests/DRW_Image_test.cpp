@@ -19,7 +19,7 @@ static unsigned char image_OD[] = {
 
 TEST(DRW_Image, parseDwg) {
 	DRW_Image	tst;
-	dwgBuffer 	buf((char*)image_OD, sizeof(image_OD)-1 );
+	dwgBuffer 	buf((char*)image_OD, sizeof(image_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

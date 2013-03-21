@@ -19,7 +19,7 @@ static unsigned char viewport_OD[] = {
 
 TEST(DRW_Viewport, parseDwg) {
 	DRW_Viewport	tst;
-	dwgBuffer 	buf((char*)viewport_OD, sizeof(viewport_OD)-1 );
+	dwgBuffer 	buf((char*)viewport_OD, sizeof(viewport_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

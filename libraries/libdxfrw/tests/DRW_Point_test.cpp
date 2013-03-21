@@ -19,7 +19,7 @@ static unsigned char point_OD[] = {
 
 TEST(DRW_Point, parseDwg) {
 	DRW_Point	tst;
-	dwgBuffer 	buf((char*)point_OD, sizeof(point_OD)-1 );
+	dwgBuffer 	buf((char*)point_OD, sizeof(point_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

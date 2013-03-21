@@ -19,7 +19,7 @@ static unsigned char hatch_OD[] = {
 
 TEST(DRW_Hatch, parseDwg) {
 	DRW_Hatch	tst;
-	dwgBuffer 	buf((char*)hatch_OD, sizeof(hatch_OD)-1 );
+	dwgBuffer 	buf((char*)hatch_OD, sizeof(hatch_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

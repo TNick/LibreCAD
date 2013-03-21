@@ -19,7 +19,7 @@ static unsigned char spline_OD[] = {
 
 TEST(DRW_Spline, parseDwg) {
 	DRW_Spline	tst;
-	dwgBuffer 	buf((char*)spline_OD, sizeof(spline_OD)-1 );
+	dwgBuffer 	buf((char*)spline_OD, sizeof(spline_OD) );
 	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }
