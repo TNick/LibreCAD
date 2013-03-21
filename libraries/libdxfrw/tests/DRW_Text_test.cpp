@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static const char text_OD = {
+static char text_OD = {
 	0x0
 };
 
 TEST(DRW_Text, parseDwg) {
 	DRW_Text	tst;
-	dwgBuffer *	buf(&text_OD, sizeof(text_OD)-1 );
-	tst.parseDwg( DRW::AC1014, buf );
+	dwgBuffer 	buf(&text_OD, sizeof(text_OD)-1);
+	tst.parseDwg(DRW::AC1014, &buf);
 	
 }

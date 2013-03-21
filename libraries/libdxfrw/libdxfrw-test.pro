@@ -7,7 +7,7 @@ include(../../settings.pro)
 include(../../common.pro)
 
 # google test library
-LIBS += -lgtest_main -lgtest
+LIBS += -lgtest_main -lgtest # -ldxfrw
 
 SOURCES += \
     tests/DRW_Xline_test.cpp \
@@ -42,6 +42,35 @@ SOURCES += \
     tests/DRW_ConstructionLine_test.cpp \
     tests/DRW_Circle_test.cpp \
     tests/DRW_Block_test.cpp \
-    tests/DRW_Arc_test.cpp
+    tests/DRW_Arc_test.cpp \
+    src/libdxfrw.cpp \
+    src/libdwgr.cpp \
+    src/dxfwriter.cpp \
+    src/dxfreader.cpp \
+    src/dwgreader.cpp \
+    src/dwgbuffer.cpp \
+    src/drw_textcodec.cpp \
+    src/drw_objects.cpp \
+    src/drw_entities.cpp
+
+HEADERS += \
+    src/libdxfrw.h \
+    src/libdwgr.h \
+    src/dxfwriter.h \
+    src/dxfreader.h \
+    src/dwgreader.h \
+    src/dwgbuffer.h \
+    src/drw_textcodec.h \
+    src/drw_objects.h.orig \
+    src/drw_objects.h \
+    src/drw_interface.h \
+    src/drw_entities.h \
+    src/drw_entities.cpp.orig \
+    src/drw_cptables.h \
+    src/drw_cptable950.h \
+    src/drw_cptable949.h \
+    src/drw_cptable936.h \
+    src/drw_cptable932.h \
+    src/drw_base.h
 
 

@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static const char constructionline_OD = {
+static char constructionline_OD = {
 	0x0
 };
 
-//TEST(DRW_ConstructionLine, parseDwg) {
+TEST(DRW_ConstructionLine, parseDwg) {
 //	DRW_ConstructionLine	tst;
-//	dwgBuffer *	buf(&constructionline_OD, sizeof(constructionline_OD)-1 );
-//	tst.parseDwg( DRW::AC1014, buf );
+	dwgBuffer 	buf(&constructionline_OD, sizeof(constructionline_OD)-1 );
+	//tst.parseDwg( DRW::AC1014, &buf );
 	
-//}
+}

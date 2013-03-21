@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static const char circle_OD = {
+static char circle_OD = {
 	0x0
 };
 
 TEST(DRW_Circle, parseDwg) {
 	DRW_Circle	tst;
-	dwgBuffer *	buf(&circle_OD, sizeof(circle_OD)-1 );
-	tst.parseDwg( DRW::AC1014, buf );
+	dwgBuffer 	buf(&circle_OD, sizeof(circle_OD)-1 );
+	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

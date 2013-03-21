@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static const char dimradial_OD = {
+static char dimradial_OD = {
 	0x0
 };
 
 TEST(DRW_DimRadial, parseDwg) {
 	DRW_DimRadial	tst;
-	dwgBuffer *	buf(&dimradial_OD, sizeof(dimradial_OD)-1 );
-	tst.parseDwg( DRW::AC1014, buf );
+	dwgBuffer 	buf(&dimradial_OD, sizeof(dimradial_OD)-1 );
+	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }

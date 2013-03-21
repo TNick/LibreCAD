@@ -13,13 +13,13 @@
 #include	<gtest/gtest.h>
 #include	<libdwgr.h>
 
-static const char dimlinear_OD = {
+static char dimlinear_OD = {
 	0x0
 };
 
 TEST(DRW_DimLinear, parseDwg) {
 	DRW_DimLinear	tst;
-	dwgBuffer *	buf(&dimlinear_OD, sizeof(dimlinear_OD)-1 );
-	tst.parseDwg( DRW::AC1014, buf );
+	dwgBuffer 	buf(&dimlinear_OD, sizeof(dimlinear_OD)-1 );
+	//tst.parseDwg( DRW::AC1014, &buf );
 	
 }
