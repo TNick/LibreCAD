@@ -525,6 +525,7 @@ public:
 
     void parseCode(int code, dxfReader *reader);
     void updateAngle();    //recalculate angle if 'haveXAxis' is true
+    virtual bool parseDwg(DRW::Version v, dwgBuffer *buf);
 
 public:
     double interlin;     /*!< width factor, code 44 */
